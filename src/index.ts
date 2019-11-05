@@ -1,5 +1,6 @@
 import "./index.css";
 import antelopeImg from "./assets/antelope.png";
+import { Antelope } from "./Antelope";
 
 function resizeCanvasToDisplaySize(canvas: HTMLCanvasElement) {
   // look up the size the canvas is being displayed
@@ -25,7 +26,7 @@ function loadImage(src: string): Promise<HTMLImageElement> {
   });
 }
 
-class Game {
+export class Game {
   private static instance: Game;
 
   public canvas: HTMLCanvasElement;
@@ -54,16 +55,36 @@ function initCanvas() {
   game.canvas = canvas;
 }
 
-function draw() {
+function draw(antelopes: Antelope[]) {
   const game = Game.getInstance();
   const ctx = game.ctx;
+  ctx.clearRect(0, 0, game.canvas.width, game.canvas.height);
 
-  const antelopeImg = game.sprites["antelope"];
-  for (let i = 0; i < 50; ++i) {
-    const x = Math.floor(Math.random() * game.canvas.width);
-    const y = Math.floor(Math.random() * game.canvas.height);
-    ctx.drawImage(antelopeImg, x, y);
-  }
+  antelopes.forEach(antelope => {
+    antelope.flock(antelopes);
+    if (antelope.position.x < 0) {
+      antelope.position.x = 0;
+      antelope.velocity.mul(-1);
+    }
+    if (antelope.position.y < 0) {
+      antelope.position.y = 0;
+      antelope.velocity.mul(-1);
+    }
+    if (antelope.position.x > game.canvas.width) {
+      antelope.position.x = game.canvas.width - game.sprites["antelope"].width;
+      antelope.velocity.mul(-1);
+    }
+
+    if (antelope.position.y > game.canvas.height) {
+      antelope.position.y =
+        game.canvas.height - game.sprites["antelope"].height;
+      antelope.velocity.mul(-1);
+    }
+
+    antelope.draw();
+  });
+
+  window.requestAnimationFrame(() => draw(antelopes));
 }
 
 const game = Game.getInstance();
@@ -73,5 +94,12 @@ Promise.all([loadImage(antelopeImg)]).then(([antelopeImg]) => {
     antelope: antelopeImg
   };
 
-  draw();
+  const antelopes: Antelope[] = [];
+  for (let i = 0; i < 50; ++i) {
+    const x = Math.floor(Math.random() * game.canvas.width);
+    const y = Math.floor(Math.random() * game.canvas.height);
+    antelopes.push(new Antelope(x, y));
+  }
+
+  window.requestAnimationFrame(() => draw(antelopes));
 });
