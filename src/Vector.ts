@@ -8,29 +8,30 @@ export class Vector {
   add(v: Vector): Vector {
     this.x += v.x;
     this.y += v.y;
-
     return this;
   }
 
-  sub(v: Vector): void {
+  sub(v: Vector): Vector {
     this.x -= v.x;
     this.y -= v.y;
+    return this;
   }
 
   mul(n: number): Vector {
     this.x *= n;
     this.y *= n;
-
     return this;
   }
 
-  div(n: number): void {
+  div(n: number): Vector {
     this.x /= n;
     this.y /= n;
+    return this;
   }
 
-  normalize(): void {
+  normalize(): Vector {
     this.div(this.magnitude || 1);
+    return this;
   }
 
   diff(v: Vector): Vector {

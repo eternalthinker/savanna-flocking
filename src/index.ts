@@ -64,21 +64,21 @@ function draw(antelopes: Antelope[]) {
     antelope.flock(antelopes);
     if (antelope.position.x < 0) {
       antelope.position.x = 0;
-      antelope.velocity.mul(-1);
+      //antelope.velocity.mul(-1);
     }
     if (antelope.position.y < 0) {
       antelope.position.y = 0;
-      antelope.velocity.mul(-1);
+      //antelope.velocity.mul(-1);
     }
     if (antelope.position.x > game.canvas.width) {
       antelope.position.x = game.canvas.width - game.sprites["antelope"].width;
-      antelope.velocity.mul(-1);
+      //antelope.velocity.mul(-1);
     }
 
     if (antelope.position.y > game.canvas.height) {
       antelope.position.y =
         game.canvas.height - game.sprites["antelope"].height;
-      antelope.velocity.mul(-1);
+      //antelope.velocity.mul(-1);
     }
 
     antelope.draw();
@@ -98,7 +98,7 @@ Promise.all([loadImage(antelopeImg)]).then(([antelopeImg]) => {
   for (let i = 0; i < 50; ++i) {
     const x = Math.floor(Math.random() * game.canvas.width);
     const y = Math.floor(Math.random() * game.canvas.height);
-    antelopes.push(new Antelope(x, y));
+    antelopes.push(new Antelope(x, y, game));
   }
 
   window.requestAnimationFrame(() => draw(antelopes));
