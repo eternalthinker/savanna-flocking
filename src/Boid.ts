@@ -4,13 +4,13 @@ import { Game } from "./index";
 export class Boid {
   public velocity: Vector = new Vector(5, 5);
   public position: Vector;
-  private radius: number = 50;
-  private speed: number = 3;
+  protected radius: number = 50;
+  protected speed: number = 3;
 
-  private alignmentWeight: number = 1;
-  private cohesionWeight: number = 1;
-  private separationWeight: number = 3;
-  private wallSeparationWeight: number = 5;
+  protected alignmentWeight: number = 1;
+  protected cohesionWeight: number = 1;
+  protected separationWeight: number = 3;
+  protected wallSeparationWeight: number = 5;
 
   constructor(x: number, y: number, protected game: Game) {
     this.position = new Vector(x, y);
@@ -68,7 +68,11 @@ export class Boid {
       }
     });
 
-    v.div(neighborCount || 1);
+    if (neighborCount === 0) {
+      return v;
+    }
+
+    v.div(neighborCount);
     v.normalize();
     return v;
   }
@@ -112,7 +116,11 @@ export class Boid {
       }
     });
 
-    v.div(neighborCount || 1);
+    if (neighborCount === 0) {
+      return v;
+    }
+
+    v.div(neighborCount);
     v.mul(-1);
     v.normalize();
     return v;

@@ -1,11 +1,13 @@
-import { PreyBoid } from "./PreyBoid";
+import { PredatorBoid } from "./PredatorBoid";
 import { Game } from "./index";
 
-export class Antelope extends PreyBoid {
-  private sprite: HTMLImageElement = this.game.sprites["antelope"];
+export class Lion extends PredatorBoid {
+  private sprite: HTMLImageElement = this.game.sprites["lion"];
 
   constructor(x: number, y: number, game: Game) {
     super(x, y, game);
+    this.speed = 3.5;
+    this.radius = 100;
   }
 
   draw() {
