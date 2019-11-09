@@ -1,18 +1,20 @@
 import { Vector } from "./Vector";
 import { Game } from "./index";
+import { Sprite } from "./Sprite";
 
-export class Boid {
+export class Boid extends Sprite {
   public velocity: Vector = new Vector(5, 5);
   public position: Vector;
   protected radius: number = 50;
-  protected speed: number = 3;
+  protected speed: number = 1;
 
-  protected alignmentWeight: number = 1;
+  protected alignmentWeight: number = 2;
   protected cohesionWeight: number = 1;
-  protected separationWeight: number = 3;
+  protected separationWeight: number = 2;
   protected wallSeparationWeight: number = 5;
 
   constructor(x: number, y: number, protected game: Game) {
+    super(game);
     this.position = new Vector(x, y);
   }
 

@@ -3,7 +3,7 @@ import { Game } from "./index";
 import { PredatorBoid } from "./PredatorBoid";
 
 export class PreyBoid extends Boid {
-  protected fleeingWeight: number = 3;
+  protected fleeingWeight: number = 6;
 
   constructor(x: number, y: number, game: Game) {
     super(x, y, game);
@@ -28,6 +28,7 @@ export class PreyBoid extends Boid {
       .add(fleeing);
     this.velocity.normalize();
     this.velocity.mul(this.speed);
+    this.flipX = this.velocity.x < 0 ? false : true;
     this.position.add(this.velocity);
   }
 }
