@@ -1,4 +1,5 @@
 import { Game } from "./index";
+import { throttle } from "lodash";
 
 export type Animation = {
   spriteSheet: HTMLImageElement | HTMLCanvasElement;
@@ -19,7 +20,11 @@ export class Sprite {
   private playing: boolean = true;
   private lastUpdateTime = Date.now();
 
-  constructor(protected game: Game) {}
+  private setFlipXThrottled: (flipX: boolean) => void;
+
+  constructor(protected game: Game) {
+    this.setFlipXThrottled = throttle(this.setFlipX.bind(this), 250);
+  }
 
   addAnimation(name: string, animation: Animation) {
     animation.height = animation.spriteSheet.height;
@@ -34,13 +39,17 @@ export class Sprite {
     return this.playing;
   }
 
-  set flipX(flipX: boolean) {
+  private setFlipX(flipX: boolean) {
     if (!this._flipX && flipX) {
       this.setAnimation(`${this.currentAnimation}_flipX`);
     } else if (this._flipX && !flipX) {
       this.setAnimation(this.currentAnimation.replace("_flipX", ""));
     }
     this._flipX = flipX;
+  }
+
+  set flipX(flipX: boolean) {
+    this.setFlipXThrottled(flipX);
   }
 
   setAnimation(name: string, resetFrame = false) {

@@ -28,6 +28,7 @@ export class PredatorBoid extends Boid {
       .add(chasing);
     this.velocity.normalize();
     this.velocity.mul(this.speed);
+    this.flipX = this.velocity.x < 0 ? false : true;
     this.position.add(this.velocity);
   }
 }

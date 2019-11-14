@@ -3,6 +3,7 @@ import "./index.css";
 import antelopeImg from "./assets/antelope.png";
 import lionImg from "./assets/lion.png";
 import antelopeSheet from "./assets/antelope_sheet.png";
+import lionSheet from "./assets/lion_sheet.png";
 import { Antelope } from "./Antelope";
 import { Animation } from "./Sprite";
 
@@ -49,12 +50,13 @@ export class Game {
 
 function initCanvas() {
   const canvas = <HTMLCanvasElement>document.getElementById("cnvs");
-  const ctx = canvas.getContext("2d");
-  ctx.translate(0.5, 0.5);
-  const game = Game.getInstance();
-
   resizeCanvasToDisplaySize(canvas);
 
+  const ctx = canvas.getContext("2d");
+  ctx.imageSmoothingEnabled = false;
+  ctx.translate(0.5, 0.5);
+
+  const game = Game.getInstance();
   game.ctx = ctx;
   game.canvas = canvas;
 }
@@ -107,7 +109,7 @@ function draw(antelopes: Antelope[], lions: Lion[]) {
 
   lions.forEach(lion => {
     lion.flockWithChase(lions, antelopes);
-    lion.draw();
+    lion.update();
   });
 
   window.requestAnimationFrame(() => draw(antelopes, lions));
@@ -115,36 +117,39 @@ function draw(antelopes: Antelope[], lions: Lion[]) {
 
 const game = Game.getInstance();
 initCanvas();
-Promise.all([
-  loadImage(antelopeImg),
-  loadImage(lionImg),
-  loadImage(antelopeSheet)
-]).then(([antelopeImg, lionImg, antelopeSheet]) => {
-  game.sprites = {
-    antelope: antelopeImg,
-    lion: lionImg,
-    antelopeSheet,
-    antelopeSheet_flipX: getFlipXSpriteSheet({
-      spriteSheet: antelopeSheet,
-      row: 0,
-      frameCount: 6,
-      frameDuration: 100
-    })
-  };
+Promise.all([loadImage(antelopeSheet), loadImage(lionSheet)]).then(
+  ([antelopeSheet, lionSheet]) => {
+    game.sprites = {
+      antelopeSheet,
+      lionSheet,
+      antelopeSheet_flipX: getFlipXSpriteSheet({
+        spriteSheet: antelopeSheet,
+        row: 0,
+        frameCount: 6,
+        frameDuration: 100
+      }),
+      lionSheet_flipX: getFlipXSpriteSheet({
+        spriteSheet: lionSheet,
+        row: 0,
+        frameCount: 6,
+        frameDuration: 100
+      })
+    };
 
-  const antelopes: Antelope[] = [];
-  for (let i = 0; i < 50; ++i) {
-    const x = Math.floor(Math.random() * game.canvas.width);
-    const y = Math.floor(Math.random() * game.canvas.height);
-    antelopes.push(new Antelope(x, y, game));
+    const antelopes: Antelope[] = [];
+    for (let i = 0; i < 50; ++i) {
+      const x = Math.floor(Math.random() * game.canvas.width);
+      const y = Math.floor(Math.random() * game.canvas.height);
+      antelopes.push(new Antelope(x, y, game));
+    }
+
+    const lions: Lion[] = [];
+    for (let i = 0; i < 2; ++i) {
+      const x = Math.floor(Math.random() * game.canvas.width);
+      const y = Math.floor(Math.random() * game.canvas.height);
+      lions.push(new Lion(x, y, game));
+    }
+
+    window.requestAnimationFrame(() => draw(antelopes, lions));
   }
-
-  const lions: Lion[] = [];
-  for (let i = 0; i < 1; ++i) {
-    const x = Math.floor(Math.random() * game.canvas.width);
-    const y = Math.floor(Math.random() * game.canvas.height);
-    lions.push(new Lion(x, y, game));
-  }
-
-  window.requestAnimationFrame(() => draw(antelopes, lions));
-});
+);
