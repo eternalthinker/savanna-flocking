@@ -2,7 +2,7 @@ import { Boid } from "./Boid";
 import { Game } from "./index";
 import { PredatorBoid } from "./PredatorBoid";
 
-export class PreyBoid extends Boid {
+export abstract class PreyBoid extends Boid {
   protected fleeingWeight: number = 6;
 
   constructor(x: number, y: number, game: Game) {
@@ -12,6 +12,8 @@ export class PreyBoid extends Boid {
   fleeing(predators: PredatorBoid[]) {
     return this.separation(predators);
   }
+
+  abstract takeDamage(damage: number): void;
 
   flockWithFlee(boids: Boid[], predators: PredatorBoid[]) {
     const alignment = this.alignment(boids).mul(this.alignmentWeight);

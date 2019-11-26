@@ -1,5 +1,6 @@
 import { Game } from "./index";
 import { throttle } from "lodash";
+import { Collidable } from "./Collidable";
 
 export type Animation = {
   spriteSheet: HTMLImageElement | HTMLCanvasElement;
@@ -10,7 +11,7 @@ export type Animation = {
   height?: number;
 };
 
-export class Sprite {
+export class Sprite extends Collidable {
   private _flipX: boolean = false;
   protected loop: boolean = true;
   protected currentAnimation: string;
@@ -19,10 +20,14 @@ export class Sprite {
   private accTimeDelta: number = 0;
   private playing: boolean = true;
   private lastUpdateTime = Date.now();
+  public width: number = 0;
+  public height: number = 0;
+  public boundingRectColor: string = "#00ff00";
 
   private setFlipXThrottled: (flipX: boolean) => void;
 
   constructor(protected game: Game) {
+    super();
     this.setFlipXThrottled = throttle(this.setFlipX.bind(this), 250);
   }
 
@@ -87,10 +92,6 @@ export class Sprite {
     const ctx = this.game.ctx;
 
     const anim = this.animations[this.currentAnimation];
-    if (this.flipX) {
-      ctx.translate(anim.width, 0);
-      ctx.scale(-1, 1);
-    }
     ctx.drawImage(
       anim.spriteSheet,
       this.currentFrame * anim.width,
@@ -102,5 +103,14 @@ export class Sprite {
       anim.width,
       anim.height
     );
+
+    if (this.game.drawBoundingRect) {
+      const ctx = this.game.ctx;
+      ctx.strokeStyle = this.boundingRectColor;
+      ctx.beginPath();
+      const r = this.boundingRect;
+      ctx.rect(r.left, r.top, this.boundingRectWidth, this.boundingRectHeight);
+      ctx.stroke();
+    }
   }
 }

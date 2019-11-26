@@ -1,9 +1,21 @@
 import { PredatorBoid } from "./PredatorBoid";
 import { Game } from "./index";
+import { Vector } from "./Vector";
+import { PreyBoid } from "./PreyBoid";
 
 export class Lion extends PredatorBoid {
+  private readonly attackDamage = 5;
+
   constructor(x: number, y: number, game: Game) {
     super(x, y, game);
+
+    const spriteSheet = this.game.sprites.lionSheet;
+    this.width = spriteSheet.width / 6;
+    this.height = spriteSheet.height;
+    this.boundingRectWidth = this.width * 0.7;
+    this.boundingRectHeight = this.height * 0.7;
+    this.boundingRectColor = "#ff0000";
+
     this.speed = 1.5;
     this.radius = 100;
     this.addAnimation("run", {
@@ -22,6 +34,15 @@ export class Lion extends PredatorBoid {
   }
 
   update() {
+    this.boundingRectCenter = new Vector(
+      this.position.x + this.width / 2,
+      this.position.y + this.height / 2
+    );
     this.draw(this.position.x, this.position.y);
+  }
+
+  attack(preys: PreyBoid[]) {
+    // Attack animation
+    preys.forEach(prey => prey.takeDamage(this.attackDamage));
   }
 }

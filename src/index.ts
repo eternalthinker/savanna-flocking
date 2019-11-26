@@ -34,6 +34,8 @@ function loadImage(src: string): Promise<HTMLImageElement> {
 export class Game {
   private static instance: Game;
 
+  public drawBoundingRect = true;
+
   public canvas: HTMLCanvasElement;
   public ctx: CanvasRenderingContext2D;
   public sprites: { [key: string]: HTMLImageElement | HTMLCanvasElement };
