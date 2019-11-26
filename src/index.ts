@@ -6,6 +6,7 @@ import antelopeSheet from "./assets/antelope_sheet.png";
 import lionSheet from "./assets/lion_sheet.png";
 import { Antelope } from "./Antelope";
 import { Animation } from "./Sprite";
+import { Updatable } from "./Updatable";
 
 function resizeCanvasToDisplaySize(canvas: HTMLCanvasElement) {
   // look up the size the canvas is being displayed
@@ -34,7 +35,10 @@ function loadImage(src: string): Promise<HTMLImageElement> {
 export class Game {
   private static instance: Game;
 
-  public drawBoundingRect = true;
+  private updatables: Set<Updatable> = new Set<Updatable>();
+
+  public drawBoundingRect = false;
+  public gravity = 0.1;
 
   public canvas: HTMLCanvasElement;
   public ctx: CanvasRenderingContext2D;
@@ -47,6 +51,18 @@ export class Game {
       Game.instance = new Game();
     }
     return Game.instance;
+  }
+
+  registerUpdatable(u: Updatable) {
+    this.updatables.add(u);
+  }
+
+  deregisterUpdatable(u: Updatable) {
+    this.updatables.delete(u);
+  }
+
+  update() {
+    this.updatables.forEach(u => u.update());
   }
 }
 
@@ -104,6 +120,8 @@ function draw(antelopes: Antelope[], lions: Lion[]) {
   ctx.fillStyle = "#987ffa";
   ctx.fillRect(0, 0, game.canvas.width, game.canvas.height);
 
+  antelopes = antelopes.filter(antelope => antelope.isAlive);
+
   antelopes.forEach(antelope => {
     antelope.flockWithFlee(antelopes, lions);
     antelope.update();
@@ -113,6 +131,8 @@ function draw(antelopes: Antelope[], lions: Lion[]) {
     lion.flockWithChase(lions, antelopes);
     lion.update();
   });
+
+  game.update();
 
   window.requestAnimationFrame(() => draw(antelopes, lions));
 }
@@ -146,7 +166,7 @@ Promise.all([loadImage(antelopeSheet), loadImage(lionSheet)]).then(
     }
 
     const lions: Lion[] = [];
-    for (let i = 0; i < 2; ++i) {
+    for (let i = 0; i < 20; ++i) {
       const x = Math.floor(Math.random() * game.canvas.width);
       const y = Math.floor(Math.random() * game.canvas.height);
       lions.push(new Lion(x, y, game));

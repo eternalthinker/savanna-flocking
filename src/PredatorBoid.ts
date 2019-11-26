@@ -10,13 +10,16 @@ export abstract class PredatorBoid extends Boid {
   }
 
   chasing(preys: PreyBoid[]) {
-    // Filter neightbours
-    // If collision
-    // - call attack
+    preys.forEach(prey => {
+      if (this.collidesWith(prey)) {
+        this.attack(prey);
+      }
+    });
+
     return this.cohesion(preys);
   }
 
-  abstract attack(preys: PreyBoid[]): void;
+  abstract attack(prey: PreyBoid): void;
 
   flockWithChase(boids: Boid[], preys: PreyBoid[]) {
     const alignment = this.alignment(boids).mul(this.alignmentWeight);

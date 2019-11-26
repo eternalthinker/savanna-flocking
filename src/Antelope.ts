@@ -1,6 +1,7 @@
 import { PreyBoid } from "./PreyBoid";
 import { Game } from "./index";
 import { Vector } from "./Vector";
+import { BloodParticleSystem } from "./BloodParticleSystem";
 
 export class Antelope extends PreyBoid {
   private health = 100;
@@ -14,6 +15,10 @@ export class Antelope extends PreyBoid {
     this.height = spriteSheet.height;
     this.boundingRectWidth = this.width * 0.7;
     this.boundingRectHeight = this.height * 0.7;
+    this.boundingRectCenter = new Vector(
+      this.position.x + this.width / 2,
+      this.position.y + this.height / 2
+    );
 
     this.addAnimation("run", {
       spriteSheet: this.game.sprites.antelopeSheet,
@@ -45,6 +50,10 @@ export class Antelope extends PreyBoid {
   takeDamage(damage: number) {
     // animation?
     // blood
+    const _blood = new BloodParticleSystem(
+      this.game,
+      new Vector(this.position.x, this.position.y)
+    );
     this.health -= damage;
     if (this.health <= 0) {
       this.die();
