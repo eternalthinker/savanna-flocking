@@ -1,12 +1,10 @@
 import { Lion } from "./Lion";
 import "./index.css";
-import antelopeImg from "./assets/antelope.png";
-import lionImg from "./assets/lion.png";
 import antelopeSheet from "./assets/antelope_sheet.png";
 import lionSheet from "./assets/lion_sheet.png";
 import { Antelope } from "./Antelope";
 import { Animation } from "./Sprite";
-import { Updatable } from "./Updatable";
+import { Game } from "./Game";
 
 function resizeCanvasToDisplaySize(canvas: HTMLCanvasElement) {
   // look up the size the canvas is being displayed
@@ -30,40 +28,6 @@ function loadImage(src: string): Promise<HTMLImageElement> {
     img.addEventListener("error", err => reject(err));
     img.src = src;
   });
-}
-
-export class Game {
-  private static instance: Game;
-
-  private updatables: Set<Updatable> = new Set<Updatable>();
-
-  public drawBoundingRect = false;
-  public gravity = 0.1;
-
-  public canvas: HTMLCanvasElement;
-  public ctx: CanvasRenderingContext2D;
-  public sprites: { [key: string]: HTMLImageElement | HTMLCanvasElement };
-
-  private constructor() {}
-
-  static getInstance(): Game {
-    if (!Game.instance) {
-      Game.instance = new Game();
-    }
-    return Game.instance;
-  }
-
-  registerUpdatable(u: Updatable) {
-    this.updatables.add(u);
-  }
-
-  deregisterUpdatable(u: Updatable) {
-    this.updatables.delete(u);
-  }
-
-  update() {
-    this.updatables.forEach(u => u.update());
-  }
 }
 
 function initCanvas() {
@@ -120,6 +84,8 @@ function draw(antelopes: Antelope[], lions: Lion[]) {
   ctx.fillStyle = "#987ffa";
   ctx.fillRect(0, 0, game.canvas.width, game.canvas.height);
 
+  game.layers["background"].update();
+
   antelopes = antelopes.filter(antelope => antelope.isAlive);
 
   antelopes.forEach(antelope => {
@@ -132,7 +98,7 @@ function draw(antelopes: Antelope[], lions: Lion[]) {
     lion.update();
   });
 
-  game.update();
+  game.layers["foreground"].update();
 
   window.requestAnimationFrame(() => draw(antelopes, lions));
 }

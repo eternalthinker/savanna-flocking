@@ -1,5 +1,5 @@
 import { Vector } from "./Vector";
-import { Game } from "./index";
+import { Game } from "./Game";
 import { Sprite } from "./Sprite";
 
 export class Boid extends Sprite {

@@ -1,9 +1,10 @@
+import { BloodDrawable } from "./BloodDrawable";
 import { Particle } from "./Particle";
 import { Vector } from "./Vector";
-import { Game } from "./index";
+import { Game } from "./Game";
 import { Updatable } from "./Updatable";
 
-export class BloodParticleSystem extends Updatable {
+export class BloodParticleSystem implements Updatable {
   private particles: Particle[] = [];
 
   constructor(
@@ -11,22 +12,22 @@ export class BloodParticleSystem extends Updatable {
     private readonly origin: Vector,
     private readonly particleCount: number = 5
   ) {
-    super();
     this.init();
   }
 
   init() {
     for (let i = 0; i < this.particleCount; i++) {
-      const particle = new Particle(this.game, this.origin);
+      const bloodDrawable = new BloodDrawable(this.game);
+      const particle = new Particle(this.game, bloodDrawable, this.origin);
       this.particles.push(particle);
     }
-    this.game.registerUpdatable(this);
+    this.game.registerUpdatable(this, "foreground");
   }
 
   update() {
     this.particles = this.particles.filter(particle => particle.isAlive);
     if (this.particles.length === 0) {
-      this.game.deregisterUpdatable(this);
+      this.game.deregisterUpdatable(this, "foreground");
       return;
     }
     this.particles.forEach(particle => particle.draw());

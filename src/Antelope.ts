@@ -1,5 +1,5 @@
 import { PreyBoid } from "./PreyBoid";
-import { Game } from "./index";
+import { Game } from "./Game";
 import { Vector } from "./Vector";
 import { BloodParticleSystem } from "./BloodParticleSystem";
 
@@ -52,7 +52,10 @@ export class Antelope extends PreyBoid {
     // blood
     const _blood = new BloodParticleSystem(
       this.game,
-      new Vector(this.position.x, this.position.y)
+      new Vector(
+        this.position.x + (Math.random() * this.width) / 2,
+        this.position.y + (Math.random() * this.height) / 2
+      )
     );
     this.health -= damage;
     if (this.health <= 0) {

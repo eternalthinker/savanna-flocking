@@ -1,6 +1,7 @@
-import { Game } from "./index";
+import { Game } from "./Game";
 import { throttle } from "lodash";
 import { Collidable } from "./Collidable";
+import { Drawable } from "./Drawable";
 
 export type Animation = {
   spriteSheet: HTMLImageElement | HTMLCanvasElement;
@@ -11,7 +12,7 @@ export type Animation = {
   height?: number;
 };
 
-export class Sprite extends Collidable {
+export class Sprite extends Collidable implements Drawable {
   private _flipX: boolean = false;
   protected loop: boolean = true;
   protected currentAnimation: string;
@@ -65,11 +66,11 @@ export class Sprite extends Collidable {
     this.playing = true;
   }
 
-  draw(x: number, y: number) {
+  draw(x: number, y: number, opacity?: number) {
     const timeDelta = Date.now() - this.lastUpdateTime;
     this.accTimeDelta += timeDelta;
 
-    this.render(x, y);
+    this.render(x, y, opacity);
     const anim = this.animations[this.currentAnimation];
     if (this.accTimeDelta > anim.frameDuration) {
       this.accTimeDelta = 0;
@@ -88,8 +89,13 @@ export class Sprite extends Collidable {
     this.lastUpdateTime = Date.now();
   }
 
-  render(x: number, y: number) {
+  render(x: number, y: number, opacity?: number) {
     const ctx = this.game.ctx;
+
+    if (opacity != null) {
+      ctx.save();
+      ctx.globalAlpha = opacity;
+    }
 
     const anim = this.animations[this.currentAnimation];
     ctx.drawImage(
@@ -103,6 +109,10 @@ export class Sprite extends Collidable {
       anim.width,
       anim.height
     );
+
+    if (opacity != null) {
+      ctx.restore();
+    }
 
     if (this.game.drawBoundingRect) {
       const ctx = this.game.ctx;

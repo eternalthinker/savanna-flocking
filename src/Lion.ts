@@ -1,5 +1,5 @@
 import { PredatorBoid } from "./PredatorBoid";
-import { Game } from "./index";
+import { Game } from "./Game";
 import { Vector } from "./Vector";
 import { PreyBoid } from "./PreyBoid";
 

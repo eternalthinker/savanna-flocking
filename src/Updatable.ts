@@ -1,3 +1,3 @@
-export abstract class Updatable {
-  abstract update(): void;
+export interface Updatable {
+  update(): void;
 }

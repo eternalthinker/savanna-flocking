@@ -1,5 +1,5 @@
 import { Boid } from "./Boid";
-import { Game } from "./index";
+import { Game } from "./Game";
 import { PreyBoid } from "./PreyBoid";
 
 export abstract class PredatorBoid extends Boid {
