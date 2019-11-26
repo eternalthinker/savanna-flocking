@@ -10,8 +10,9 @@ export class Game {
   };
   private layerStack = ["background", "content", "foreground"];
 
+  public readonly gravity = 0.1;
   public drawBoundingRect = false;
-  public gravity = 0.1;
+  public showBlood = true;
 
   public canvas: HTMLCanvasElement;
   public ctx: CanvasRenderingContext2D;

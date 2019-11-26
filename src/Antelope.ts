@@ -48,15 +48,15 @@ export class Antelope extends PreyBoid {
   }
 
   takeDamage(damage: number) {
-    // animation?
-    // blood
-    const _blood = new BloodParticleSystem(
-      this.game,
-      new Vector(
-        this.position.x + (Math.random() * this.width) / 2,
-        this.position.y + (Math.random() * this.height) / 2
-      )
-    );
+    if (this.game.showBlood) {
+      const _blood = new BloodParticleSystem(
+        this.game,
+        new Vector(
+          this.position.x + (Math.random() * this.width) / 2,
+          this.position.y + (Math.random() * this.height) / 2
+        )
+      );
+    }
     this.health -= damage;
     if (this.health <= 0) {
       this.die();

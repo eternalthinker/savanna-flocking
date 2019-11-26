@@ -3,6 +3,7 @@ import { Particle } from "./Particle";
 import { Vector } from "./Vector";
 import { Game } from "./Game";
 import { Updatable } from "./Updatable";
+import { Perishable } from "./Perishable";
 
 export class BloodParticleSystem implements Updatable {
   private particles: Particle[] = [];

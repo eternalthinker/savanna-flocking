@@ -1,6 +1,7 @@
 import { Game } from "./Game";
 import { Vector } from "./Vector";
 import { Drawable } from "./Drawable";
+import { Perishable } from "./Perishable";
 
 export class Particle {
   protected velocity: Vector = new Vector(
@@ -26,6 +27,13 @@ export class Particle {
       this.drawable.draw(this.position.x, this.position.y);
     } else {
       this.isAlive = false;
+      const _perishable = new Perishable(
+        this.game,
+        this.drawable,
+        this.position,
+        1000,
+        0.05
+      );
     }
   }
 }
