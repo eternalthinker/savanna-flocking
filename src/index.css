@@ -6,7 +6,11 @@ body {
   margin: 0;
 }
 
-#cnvs {
+#cnvs,
+#bgCnvs {
   height: 100%;
   width: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
 }
