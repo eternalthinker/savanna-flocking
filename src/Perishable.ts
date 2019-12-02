@@ -5,8 +5,9 @@ import { Game } from "./Game";
 
 export class Perishable implements Updatable {
   private opacity = 1;
-  private accTimeDelta: number = 0;
+  private accTimeDelta = 0;
   private lastUpdateTime = Date.now();
+  private step = 0;
 
   constructor(
     private game: Game,
@@ -19,7 +20,9 @@ export class Perishable implements Updatable {
   }
 
   update() {
-    const timeDelta = Date.now() - this.lastUpdateTime;
+    const currentTime = Date.now();
+    const timeDelta = currentTime - this.lastUpdateTime;
+    this.lastUpdateTime = currentTime;
     this.accTimeDelta += timeDelta;
 
     this.drawable.draw(this.position.x, this.position.y, this.opacity);
@@ -27,6 +30,7 @@ export class Perishable implements Updatable {
     if (this.accTimeDelta > this.stepDuration) {
       this.accTimeDelta = 0;
       this.opacity -= this.opacityStep;
+      this.step++;
       if (this.opacity <= 0) {
         this.game.deregisterUpdatable(this, "background");
       }

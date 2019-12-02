@@ -31,8 +31,8 @@ export class Particle {
         this.game,
         this.drawable,
         this.position,
-        1000,
-        0.05
+        500,
+        0.2
       );
     }
   }
