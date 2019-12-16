@@ -54,7 +54,7 @@ function initBgCanvas(game: Game) {
   ctx.imageSmoothingEnabled = false;
   ctx.translate(0.5, 0.5);
 
-  ctx.fillStyle = "#70b575";
+  ctx.fillStyle = "#987ffa"; //"#70b575";
   ctx.rect(0, 0, canvas.width, canvas.height);
   ctx.fill();
 }
